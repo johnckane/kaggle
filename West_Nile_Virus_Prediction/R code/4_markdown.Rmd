@@ -1,0 +1,542 @@
+---
+title: "West Nile Virus Prediction"
+author: "John Kane"
+date: "06/02/2015"
+output: html_document
+---
+
+```{r,echo=FALSE,include=FALSE}
+setwd('/home/john/Kaggle/West_Nile_Virus_Prediction/Data')
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(gridExtra)
+library(ggmap)
+library(GGally)
+library(zoo)
+data_dir <- "/home/john/Kaggle/West_Nile_Virus_Prediction"
+mapdata <- readRDS(file.path(data_dir, "mapdata_copyright_openstreetmap_contributors.rds"))
+### These are some data files to load ###
+training <- read.csv('training.csv', stringsAsFactors = FALSE, header = TRUE)
+colnames(training) <- tolower(colnames(training))
+training$date <- as.Date(training$date)
+head(training)
+training <- tbl_df(training)
+training$year <- as.numeric(format(training$date, "%Y"))
+training$month <- format(training$date, "%b")
+training$month_day <- format(training$date, "%m %d")
+training$day_of_year <- as.numeric(format(training$date, "%j"))
+
+```
+## Summary
+The City of Chicago and Chicago Department of Public Health launched a Kaggle competition aimed at improving the city's ability to locate when and where mosquito species will test test postive for West Nile Virus (WNV).
+
+This competition is ongoing but described here are my methods and results thus far. I plan to continue improving my models to attain a higher position on the leaderboard.
+Currently I am placed in the top 10% (90/1004) of all entries.
+
+Certain features were influential to predicting positive tests for WNV no matter the method. This included a mix of engineered features and some used in their provided format. Among them are mosquito species, time of year, trap location within the city and dew point (including most recent readings, 30 day averages and spring averages) among others.
+
+In general logistic regression based methods performed better than tree based methods for classification and the corresponding area under the receiving operator curve--on which the entries were evaluated. Variable selection methods that performed the best were forward selection and shrinkage techniques such as Lasso and Ridge regression. Fully saturated models and features chosen through backward stepwise selection peformed poorly in comparision.
+
+## Problem Specification and Evaluation
+Competitiors were asked to leverage data on WNV test results from 2007, 2009, 2011 and 2013 along with weather data and data on mosquito spray efforts in 2011 and 2013 to make predictions on test results in the years 2008, 2010, 2012 and 2014.
+
+Predictions were evaluated by the corresponding area under the receiver operating characteristic curve. 
+
+## Data
+Trap data from previous test results as well as weather data from both O'Hare and Midway airports and data on spraying efforts to reduce mosquitoes in 2011 and 2013 were provided.
+
+#### Trap Data
+The "Main" dataset, the one with information on traps and results of previous tests contained variables for test date, trap identification, trap location (street address as well as latitude and longitude), trap location accuracy, mosquito species, number of mosquitos tested and presence of WNV.
+
+I made little use of several of the variables available. Address accuracy could have been used to weight some observations more heavily when using location as a feature, but for the sake of simplicity I did not consider it. Also, the number of mosquitoes present in the trap at the time of testing was not used as it is not available in the test data.
+
+#### Weather Data
+The provided weather data included daily readings from both O'Hare and Midway airports. Data provided was temperature (max, min, avg), average dew point and average wet bulb readings, among others that were not considered.
+
+#### Spray Data
+The spray data covered years 2011 and 2013, years that are part of the training dataset. No spray data was available for testing years nor the training years of 2007 and 2009. As such I felt it could not be very useful for predicting new cases on the test data. I did not make use of this dataset. 
+
+## Feature Engineering
+
+#### Time of Year
+Date of trap test is one of the variables provided in the dataset. By plotting data both aggregated across all years and then by year we see there are times were it is indeed more likely to test positive.
+
+```{r,echo=FALSE, fig.align='center'}
+day_summary <- training %>%
+    group_by(year,day_of_year) %>%
+    summarise(pos_pct = sum(wnvpresent)/n())
+p2b <- ggplot(data=day_summary,
+              aes(x=day_of_year, y = pos_pct)) +
+              geom_bar(stat = 'identity') +
+              ggtitle("Probability of Positive Test \n by Day of Year") +
+              scale_x_continuous("Day of Year") +
+              scale_y_continuous("Probability of Positive Test")
+p3 <- ggplot(data=day_summary,
+             aes(x=day_of_year, y = pos_pct)) +
+             geom_bar(stat='identity') + 
+             facet_wrap(~year,ncol = 1) +
+             ggtitle("Probability of Positive Test \n by Year and Day of Year") +
+             scale_x_continuous("Day of Year") +
+             scale_y_continuous("Probability of Postive Test")
+
+grid.arrange(p2b,p3,ncol = 2)
+
+```
+
+The average day of the year for a postive test is the 233rd, or August 20th. The histograms of days for a postive test appear reasonably symetric so my idea for an engineered feature was to classify each day as whether it is within 1, 2 or 3 standard deviations of the average day of the year. The mean and standard deviation for day of the year for postive tests is 233 (16). That leaves us with the following feature.
+
+```{r,echo = FALSE}
+levels <- c(1,2,3)
+dates <- c("Between August 5th and September 5",
+           "Between July 21st and August 4th OR September 6th and September 21",
+           "July 20th and before OR September 22nd and later")
+df_cut <- data.frame(dates,levels)
+colnames(df_cut) <- c("Date", "Level")
+set.caption('Classifying dates by relation to most likely day for positive test')
+pander(df_cut,justify = c("left","center"))
+
+```
+
+#### Mosquito Species
+Another provided variable in the training data was the species of mosquito found in the trap. 
+```{r, echo = FALSE}
+species_df <- data.frame(prop.table(table(training$species))*100)
+colnames(species_df) <- c("Species","Percentage")
+species_df <- arrange(species_df,desc(Percentage))
+pander(species_df,justify = c('left','right'),digits = 3, split.cells = c(30,30))
+```
+
+We can see that three levels of this variable make up 96.7% of all data. For a feature, I'll collapse all other species into a category "OTHER".
+```{r, echo = FALSE}
+other <- c("CULEX ERRATICUS", "CULEX SALINARIUS", "CULEX TARSALIS", "CULEX TERRITANS")
+training$species2 <- ifelse(training$species %in% other,
+                             "OTHER",
+                             training$species)
+species2_df <- data.frame(prop.table(table(training$species2))*100)
+colnames(species2_df) <- c("Species","Percentage")
+species2_df <- arrange(species2_df,desc(Percentage))
+pander(species2_df,justify = c('left','right'),digits = 3)
+```
+
+#### Trap Location
+This was the most interesting variable to account for. For each trap we have latitude and longitude information as well as street name and number. I ended up taking two approaches. The first was to divide the Chicago area into regions based on location. I did this by k-means clustering. As an example of the results when we break the regions into 4, 6, 8 and 10 regions we have the following breakdowns.
+
+```{r, echo=FALSE, fig.align='center', message=FALSE}
+set.seed(14)
+clusters <- matrix(0, nrow=7040, ncol = 9)
+for(j in 2:10){
+    clusters[,j-1] <- kmeans(cbind(training$latitude,training$longitude),centers = j, nstart = 50)$cluster
+    # the "nstart = 50" comes from a recommendation in ISLR first printing page 405.
+}
+clusters <- data.frame(clusters)
+colnames(clusters) <- c("c2","c3","c4","c5","c6","c7","c8","c9","c10")
+## now add this to the dataframe
+training_clusters <- data.frame(training,clusters)
+
+plots <- vector("list",9)
+for(k in 1:9){
+    k0 <- k+1 #for the plot titles
+    plots[[k]] <- ggmap(mapdata) + 
+        geom_point(data=training_clusters,aes(x=longitude,y=latitude,
+                                      color=as.factor(training_clusters[,18+k]))) +
+        theme(legend.position = "none") +
+        ggtitle(paste("K = ",k0,sep="")) +
+        scale_x_continuous("Longitude") +
+        scale_y_continuous("Latitude") +
+        theme(axis.text.x=element_text(angle=45))
+}
+grid.arrange(plots[[3]],#
+             plots[[5]],#
+             plots[[7]],#
+             plots[[9]],#
+             ncol = 2)
+```
+
+This approach is not based on any data for likelihood of testing positive, rather a conveneient way to create regions. In order to choose the number of clusters to use I relied on cross validated AUC based on simple logistic regressions regressing presence of WNV on region. Dividing Chicagoland into 10 regions using k-means clustering resulted in the highest cross validated AUC. 
+
+#### Weather
+To simplify the process I averaged the weather by day between readings from O'Hare and Midway airports. I suspected that the weather reports would be similar and indeed they are. The mean(sd) temperature difference between the two airports is 1.2 (1.3) degrees, the average dew point difference is 0.2 (1.5) degrees and the average wet bulb difference is 0.5 (1.0) degrees.
+
+I also thought that beyond the current day's weather the weather the previous, day, week and month may influence the outcome. Take for example the variable temperature. I calculated the average temperature the previous day, for the past 7 days, past fourteen days and past 30 days in the Chicago area. These values are arbitrary but are timeframes familar to everyone.  
+
+In cases where there was not sufficient data to calculate a variable, for example calculating the 30-day average temperature on the 20th provided day of weather data for a given year, the 30-day average would represent the average temperature for the first 20 days of the year. This technique was used across all weather variables (temperature, dew point, days with rain, wet bulb) and all time lengths (1 day, 7 days, 14 days and 30 days). 
+
+As expected these variables are highly correlated. Below are a series of plot-matrices that feature correlations in the upper portion and scatterplots in the lower. Along the diagnol are histograms of the distribution of the particular variable.
+
+
+```{r,echo = FALSE,fig.align='center'}
+setwd('/home/john/Kaggle/West_Nile_Virus_Prediction/Data')
+weather2 <- read.csv("weather2.csv",stringsAsFactors = FALSE, header = TRUE)
+weather2$date <- as.Date(weather2$date)
+weather2$year <- format(weather2$date, "%Y")
+weather3 <- weather2 %>%
+    arrange(date) %>%
+    group_by(year) %>%
+    mutate(obs = which(date == date))
+
+f_avg <- function(obs_num, length, var){
+    value <- ifelse(obs_num >= length,
+                    rollmean(var[(obs_num-length+1):obs_num],length),
+                    rollmean(var[1:obs_num],obs_num)
+                    )
+    return(value)
+}
+
+f_sum <-  function(obs_num, length, var){
+    value <- ifelse(obs_num >= length,
+                    sum(var[(obs_num-length+1):obs_num]),
+                    sum(var[1:obs_num])
+    )    
+    return(value)
+}
+
+f_lag <- function(obs_num,var){
+    value <- ifelse(obs_num > 1,
+                    var[obs_num-1],
+                    var[1]
+    )
+    return(value)
+}
+
+## try it in a for-loop, not efficient but it should work
+## first create the variables
+weather3$temp1 <- rep(0,dim(weather3)[1])
+weather3$temp7 <- rep(0,dim(weather3)[1])
+weather3$temp14 <- rep(0,dim(weather3)[1])
+weather3$temp30 <- rep(0,dim(weather3)[1])
+weather3$rain1 <- rep(0,dim(weather3)[1])
+weather3$rain7 <- rep(0,dim(weather3)[1])
+weather3$rain14 <- rep(0,dim(weather3)[1])
+weather3$rain30 <- rep(0,dim(weather3)[1])
+weather3$dew1 <- rep(0,dim(weather3)[1])
+weather3$dew7 <- rep(0,dim(weather3)[1])
+weather3$dew14 <- rep(0,dim(weather3)[1])
+weather3$dew30 <- rep(0,dim(weather3)[1])
+weather3$wet1 <- rep(0,dim(weather3)[1])
+weather3$wet7 <- rep(0,dim(weather3)[1])
+weather3$wet14 <- rep(0,dim(weather3)[1])
+weather3$wet30 <- rep(0,dim(weather3)[1])
+weather3$range1 <- rep(0,dim(weather3)[1])
+
+
+for(i in 1:dim(weather3)[1]){
+    weather3$temp1[i]  = f_avg(weather3$obs[i], 1,  weather3$avg_avg)
+    weather3$temp7[i]  = f_avg(weather3$obs[i], 7,  weather3$avg_avg)
+    weather3$temp14[i] = f_avg(weather3$obs[i], 14, weather3$avg_avg)
+    weather3$temp30[i] = f_avg(weather3$obs[i], 30, weather3$avg_avg)
+    weather3$rain1[i]  = f_sum(weather3$obs[i], 1,  weather3$wet_con)
+    weather3$rain7[i]  = f_sum(weather3$obs[i], 7,  weather3$wet_con)
+    weather3$rain14[i] = f_sum(weather3$obs[i], 14, weather3$wet_con)
+    weather3$rain30[i] = f_sum(weather3$obs[i], 30, weather3$wet_con)
+    weather3$dew1[i]   = f_avg(weather3$obs[i], 1,  weather3$avg_dew)
+    weather3$dew7[i]   = f_avg(weather3$obs[i], 7,  weather3$avg_dew)
+    weather3$dew14[i]  = f_avg(weather3$obs[i], 14, weather3$avg_dew)
+    weather3$dew30[i]  = f_avg(weather3$obs[i], 30, weather3$avg_dew)
+    weather3$wet1[i]   = f_avg(weather3$obs[i], 1,  weather3$avg_wet)
+    weather3$wet7[i]   = f_avg(weather3$obs[i], 7,  weather3$avg_wet)
+    weather3$wet14[i]  = f_avg(weather3$obs[i], 14, weather3$avg_wet)
+    weather3$wet30[i]  = f_avg(weather3$obs[i], 30, weather3$avg_wet)
+}
+
+temp <- data.frame(weather3$temp1,weather3$temp7,weather3$temp14,weather3$temp30)
+gg1 <- ggpairs(temp, title = "Temperature Plot", 
+                     diag = list(continuous = "bar"),
+                     params = c(binwidth = 1),
+                     columnLabels = c("1 Day","7 Day","14 Day","30 Day"))
+print(gg1, bottom = 0.25)
+
+rain <- data.frame(weather3$rain1,weather3$rain7,weather3$rain14,weather3$rain30)
+gg2 <- ggpairs(temp, title = "Days With Rain Plot", 
+                     diag = list(continuous = "bar"),
+                     params = c(binwidth = 1),
+                     columnLabels = c("1 Day","7 Day","14 Day","30 Day"))
+print(gg2, bottom = 0.25)
+
+dew <- data.frame(weather3$dew1,weather3$dew7,weather3$dew14,weather3$dew30)
+gg3 <- ggpairs(temp, title = "Dew Point Plot", 
+                     diag = list(continuous = "bar"),
+                     params = c(binwidth = 1),
+                     columnLabels = c("1 Day","7 Day","14 Day","30 Day"))
+print(gg3, bottom = 0.25)
+
+wet <- data.frame(weather3$wet1,weather3$wet7,weather3$wet14,weather3$wet30)
+gg4 <- ggpairs(temp, title = "Wet Bulb Plot", 
+                     diag = list(continuous = "bar"),
+                     params = c(binwidth = 1),
+                     columnLabels = c("1 Day","7 Day","14 Day","30 Day"))
+print(gg4, bottom = 0.25)
+
+```
+
+To preprocess these highly correlated and similar variables I relied on simple logistic regressions with each variable in turn being used to predict WNV on a CV dataset. For each of temperature, rain, wet bulb and dewpoint I moved forward with the variable that provided the highest AUC, the metric used to evaluate the contest. 
+
+```{r,echo=FALSE}
+rain <- c(0.55,0.60,0.62,0.61)
+temp <- c(0.56,0.54,0.62,0.72)
+dew <- c(0.65,0.68,0.72,0.76)
+wet <- c(0.63,0.64,0.71,0.75)
+
+df_weather <- data.frame(temp,rain,dew,wet)
+colnames(df_weather) <- c("Temperature","Days with Rain","Dew Point","Wet Bulb")
+rownames(df_weather) <- c("1 Day","7 Day","14 Day","30 Day")
+set.caption("CV AUC for Engineered Weather Variables")
+pander(df_weather,digits = 3, justify = c('left','center','center','center','center'), split.cells = c(11,9,11,11))
+```
+
+So in all cases except "Days with Rain" (and that was close) the 30 day averages result in the highest AUC on the CV data. For rain, days with rain out of the previous 14 did slightly better than days with rain out of the previous 30. 
+
+#### May Weather
+A topic on the Kaggle forum was a link to previously published literature that claimed there was evidence that "Drier conditions in the spring followed by wetter conditions just prior to an increase in infection were factors in some but not all years." (source:http://parasitesandvectors.com/content/pdf/1756-3305-3-19.pdf). As a proxy for spring weather I'm using weather in the month of May.
+```{r, echo = FALSE}
+setwd('/home/john/Kaggle/West_Nile_Virus_Prediction/Data')
+weather2 <- read.csv("weather2.csv", stringsAsFactors = FALSE, header = TRUE)
+weather2$date <- as.Date(weather2$date)
+weather2$year <- format(weather2$date, "%Y")
+weather2$month <- format(weather2$date, "%b")
+may <- filter(weather2, month == "May")
+
+may <- may %>%
+group_by(year) %>%
+summarise(avg_may_temp = mean(avg_avg),
+          num_may_rain = sum(wet_con),
+          avg_may_dew  = mean(avg_dew),
+          avg_may_wet  = mean(avg_wet))
+
+colnames(may) <- c("Year","Temperature","Days of Rain","Dew Point","Wet Bulb")
+set.caption("May Weather as Proxy For Spring Weather")
+pander(may, ndigits = 3, justify = c("left","center","center","center","center"))
+```
+
+There is a danger lurking in the training data here. The models will be trained only on the years 2007, 2009, 2011 and 2013 and some of the weather values for the training years (2008, 2010, 2012 and 2014) are outside of those ranges. This means we will rely on extrapolation in some instances but there is no way around it without forgoing the use of these variables. 
+
+## Modeling
+The objective of modeling is classification. Presented here are the approaches and results of logistic regression and tree-based methods. 
+
+### Variable Selection
+Considering the engineered features described above, there are too many to perform best subset selection. Even after pre-selecting the lagged weather variables based on cross-validated AUC, we still have the following 21 variables: 
+```{r, echo = FALSE}
+var_name <- c('cut',
+              'species2',
+              'c10',
+              'latitude',
+              'longitude',
+              'avg_may_temp',
+              'num_may_rain',
+              'avg_may_dew',
+              'avg_may_wet',
+              'avg_avg',
+              'avg_min',
+              'avg_max',
+              'avg_dew',
+              'avg_wet',
+              'wet_con', 
+              'temp_range',
+              'range1',
+              'temp30',
+              'rain14',
+              'dew30',
+              'wet30')
+var_desc <- c("standard deviations from average day for positive test",
+              "species with rare species classified as 'OTHER' ",
+              "region determined by k-means clustering, k = 10",
+              " ",
+              " ",
+              "average temperature in May of given year",
+              "number of days with rain in May of given year",
+              "average dew point in May of given year",
+              "average wet bulb in May of given year",
+              "average temperature the day of the test",
+              "minimum temperature the day of the test",
+              "maximum temperature the day of the test",
+              "dew point the day of the test",
+              "wet bulb the day of the test",
+              "indicator of wet conditions the day of the test",
+              "temperature range the day of the test",
+              "temperature range the day before the test",
+              "average temperature the 30 days prior to the test",
+              "number of days in the last 14 with rain in the area",
+              "average dew point the 30 days prior to the test",
+              "average wet bulb the 30 days prior to the test")
+var_type <- c("factor",
+              "factor",
+              "factor",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "factor",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous",
+              "continuous")
+var_df <- data.frame(var_name,var_desc,var_type)
+colnames(var_df) <- c("Variable name", "Variable description", "Variable type")
+pander(var_df, justify = c("left","right","right"))
+```
+
+Multiple approaches for variable selection were used: forward and backward stepwise selection, shrinkage methods, fully saturated models as well as classification trees and random forrests.  
+
+
+
+### Summary of Different Model Performance
+```{r, echo = FALSE}
+cv_auc <- c(0.7900818,
+            0.7902341,
+            0.7918189,
+            0.8290348,
+            0.8288824,
+            0.8264002,
+            0.7745842,
+            0.7960092,
+            0.6677036,
+            0.7627864,
+            0.81437,
+            0.8225344,
+            0.8238225,
+            0.8298256,
+            0.825236,
+            0.8192487)
+test_auc <- c(0.75696,
+              0.64518,
+              0.67565,
+              0.65762,
+              0.78874,
+              0.46843,
+              0.60421,
+              0.63300,
+              0.57947,
+              0.69598,
+              0.72162,
+              0.67196,
+              0.74207,
+              0.74593,
+              0.78052,
+              0.74630)
+methods <- c("Logistic regression",
+             "Logistic regression",
+             "Logistic regression",
+             "Logistic regression",
+             "Logistic regression",
+             "Logistic regression",
+             "Classification tree",
+             "Classification tree",
+             "Random forest",
+             "Random forest",
+             "Lasso regression",
+             "Lasso regression",
+             "Lasso regression",
+             "GAM",
+             "GAM",
+             "Ridge regression")
+var_selection <- c("F (R)",
+                   "B (R)",
+                   "Lasso (R)",
+                   "B (L/L)",
+                   "F (L/L)",
+                   "F (all engineered vars)",
+                   "(R)",
+                   "(L/L)",
+                   "(R)",
+                   "(L/L)",
+                   "Lambda 1 s.e. (R)",
+                   "Lambda min (R)",
+                   "Lambda 1 s.e. (L/L)",
+                   "Lasso (L/L)",
+                   "Logistic (L/L)",
+                   "Lambda 1 s.e (L/L)")
+df <- data.frame(methods, var_selection, cv_auc, test_auc)
+colnames(df) <- c("Modeling Technique","Variable Selection", "CV AUC", "Test AUC")
+df <- arrange(df,desc(test_auc))
+pander(df,digits = 4, justify = c('left','left','left','left'))
+```
+The key to deciper the variable selection methods is here:
+```{r,echo=FALSE}
+codes <- c("B","F","Lambda max", "Lambda 1 s.e.", "Lasso","Logistic","(R)","(L/L)")
+descr <- c("Backward selection",
+           "Forward selection on pre-processed variables",
+           "Lambda value that maximizes CV AUC",
+           "Lambda is largest value within 1 s.e. of lambda that maximizes CV AUC",
+           "Non-zero variables from Lasso regression at lambda 1 s.e. from maximum CV AUC",
+           "Variables from AIC based logistic forward selection",
+           "Location variable: 10 regions based on k-means clustering", 
+           "Location variable: continuous latitude/longitude variables")
+codes_descr <- data.frame(codes,descr)
+colnames(codes_descr) <- c("Code","Description")
+pander(codes_descr,justify = c("left","left"))
+```
+### General Observations
+
+- Using latitude and longitude as a feature for location performed better than using region. Five of the top six performing models on test data utilized location data in that way.
+- Regression approaches performed better than tree-based methods
+- Shrinkage methods did not perform as well as non-shrinkage methods. Although using shrinkage methods as a means of variable selection lead to high performing models.
+
+### Model Specifics for Several Models
+I'm going to focus discussion on three of these models. The ones currently ranked first, second and fifth of all models I've submitted. Two of the models used the same feature set, the one from forward slection logistic regression (going forward I'll refer to this as "Forward Vars."). The third used features from Lasso regression with variables selected at a value of lambda 1 S.E. away from the lambda value that maximized cross-validated AUC (now referred to as "Lasso Vars").
+
+#### Coefficient estimates of select models
+```{r,echo = FALSE}
+
+fwd <- c('-486.3','0.204','5.236','-4.677','Reference','-0.176','-0.880','-14.410','-2.075','Reference','-0.047','-0.972','-1.992','0.016','-0.025')
+
+
+fwd_gam <- c('-473.0','0.216 .','5.296','-4.539 *','Reference','-0.144','-0.820','-13.409','-2.115','Reference','0.026','-0.984','-2.056','0.018 * * *','-0.015')
+
+lasso_gam <- c('-461.6','0.213','0.619','-4.615 *','Reference', '-0.137','-0.814',
+               '-12.402',NA,'Reference','-0.153','-0.954','0.172 * *',NA,NA)
+
+models <- data.frame(fwd,fwd_gam,lasso_gam)
+colnames(models) <- c("Forward Logistic","GAM w/ Forward Logistic Variables",
+                      "GAM w/Lasso Variables")
+rownames(models) <- c("Intercept","30-Day Dewpoint Average","Average May Wet Bulb",
+                      "Longitude","Mosquito Species: Pipiens",
+                      "Mosquito Species: Pipiens/Restuans",
+                      "Mosquito Species: Restuans","Mosquito Species: Other", 
+                      "Average May Temperature",
+                      "Test day within 1 sd from average",
+                      "Test day between 1 and 2 sd from average",
+                      "Test day more than 2 sd from average",
+                      "Average May dew point","Test day dew point",
+                      "Previous day temperature range")
+
+set.caption("Significance codes for non-parametric effects in GAM models:  0 ' * * * ' 0.001 ' * * ' 0.01 ' * ' 0.05 '.' 0.1 ' ' 1")
+pander(models, justify = c("left", "right","right","right"), digits = 4, 
+       split.cells = c(15,15,15,15))
+```
+
+This table highlights the differences between the two variable selection methods. Forward stepwise selection includes three more variables than does Lasso regression with lambda at 1 standard error from the value that maximizes AUC. Average May temperature, dew point the day of the test, and temperature range the previous day were selected in forward stepwise logistic regression and not in Lasso. No variables are in the Lasso model that are not in the forward stepwise logistic regression model. 
+
+For the most part coefficient estimates are in agreement across all models with some notable exceptions. Average May wet bulb has a far greater effect in the models with Forward Vars. than with Lasso Vars. The sign for day of year at the level of "between 1 and 2 sd from average" is positive for the GAM model with Forward Vars, indicating it is more likely than days within 1 SD of the average to test positive. Lastly, the sign of May Dew Point is positive in the GAM model with Lasso Vars, indicating a month of May with higher dew points increases the chance of WNV incidence. This is not in concert with the other models as well as the literature. 
+
+Of course, the GAM models need to be interpreted in the context of those being the linear effects. All continuous features have smoothers that allow for the relationships to deviate from strict linearity. Also the hyperparameters are not yet tuned for the GAM models as all smoothing splines are permitted five degrees of freedom. 
+
+## Conclusions and Learnings
+- Models built on Ridge and Lasso regression were trained and cross-validated based on AUC. Forward selection logistic regression models were trained on AIC. It's possible that by cross-validating (which is a method of training) on AUC those models are overfit and do not perform as well on the test data. 
+- Tree based methods did not perform nearly as well as regression based methods. 
+- 6 of the 9 variables chosen by forward selection and 4 of the 6 chosen via Lasso regression were engineered from raw data provided. The importance of feature engineering cannot be overstated. 
+- Preprocessing the weather variables based on cross validated AUC as individual responses in logistic regression model led to much better performance on test data than considering all variables and letting the methods sort it out.
+- Somewhat simple models, with likewise simple but well constructed features, performed well. 
+
+## Possible Next Steps
+With several of the models, more tuning could improve performance. 
+For example:
+
+- For the sake of simplicity I averaged weather data on a daily basis from the two airports. It's possible that by first calculating which airport is closest to a particular site and then using only that airport's weather data for an observation, I could improve the models. 
+- GAM models: I naively have used natural splines with five degrees of freedom for continuous variables. Tuning the degrees of freedom via cross validation is an option here.
+- Lasso/Ridge regerssion: the 'glmnet()'function allows to speciy an 'alpha' that takes on values between 0 and 1 that mixes the penalty of Ridge and Lasso regression
+- My cross validation approach for all models was to select a sample of data from all years and fit model training on four years worth of data. An alternative approach would be to withhold at random one entire year's worth of data. As the test data is all based on years that the model hasn't seen, this could provide better model tuning.
+- Incorporate more temporal-spatial aspects of the data. 
+- Rather than count number of days of rain, measure total precipitation (or both, to get both frequency and quantity of rain). 
+- Additional classification techniques such as suport vector machines and neural networks. 
+- Build a two-stage model. Building off the success of these classifiers, and the test data, determine if previous positive tests in the vicinity of time/space leads to higher likelihood of a positive test in the near future. 
+
+

@@ -1,0 +1,180 @@
+"","passengerid","survived","pclass","name","sex","age","sibsp","parch","ticket","fare","cabin","embarked","cabin_level","cabin_number","cabin_listed"
+"4",4,1,1,"Futrelle, Mrs. Jacques Heath (Lily May Peel)","female",35,1,0,"113803",53.1,"C123","S","C",123,1
+"7",7,0,1,"McCarthy, Mr. Timothy J","male",54,0,0,"17463",51.8625,"E46","S","E",46,1
+"15",15,0,3,"Vestrom, Miss. Hulda Amanda Adolfina","female",14,0,0,"350406",7.8542,"","S","",NA,0
+"17",17,0,3,"Rice, Master. Eugene","male",2,4,1,"382652",29.125,"","Q","",NA,0
+"19",19,0,3,"Vander Planke, Mrs. Julius (Emelia Maria Vandemoortele)","female",31,1,0,"345763",18,"","S","",NA,0
+"21",21,0,2,"Fynney, Mr. Joseph J","male",35,0,0,"239865",26,"","S","",NA,0
+"23",23,1,3,"McGowan, Miss. Anna ""Annie""","female",15,0,0,"330923",8.0292,"","Q","",NA,0
+"25",25,0,3,"Palsson, Miss. Torborg Danira","female",8,3,1,"349909",21.075,"","S","",NA,0
+"44",44,1,2,"Laroche, Miss. Simonne Marie Anne Andree","female",3,1,2,"SC/Paris 2123",41.5792,"","C","",NA,0
+"47",47,0,3,"Lennon, Mr. Denis","male",NA,1,0,"370371",15.5,"","Q","",NA,0
+"48",48,1,3,"O'Driscoll, Miss. Bridget","female",NA,0,0,"14311",7.75,"","Q","",NA,0
+"53",53,1,1,"Harper, Mrs. Henry Sleeper (Myna Haxtun)","female",49,1,0,"PC 17572",76.7292,"D33","C","D",33,1
+"54",54,1,2,"Faunthorpe, Mrs. Lizzie (Elizabeth Anne Wilkinson)","female",29,1,0,"2926",26,"","S","",NA,0
+"57",57,1,2,"Rugg, Miss. Emily","female",21,0,0,"C.A. 31026",10.5,"","S","",NA,0
+"58",58,0,3,"Novel, Mr. Mansouer","male",28.5,0,0,"2697",7.2292,"","C","",NA,0
+"61",61,0,3,"Sirayanian, Mr. Orsen","male",22,0,0,"2669",7.2292,"","C","",NA,0
+"63",63,0,1,"Harris, Mr. Henry Birkhardt","male",45,1,0,"36973",83.475,"C83","S","C",83,1
+"71",71,0,2,"Jenkin, Mr. Stephen Curnow","male",32,0,0,"C.A. 33111",10.5,"","S","",NA,0
+"73",73,0,2,"Hood, Mr. Ambrose Jr","male",21,0,0,"S.O.C. 14879",73.5,"","S","",NA,0
+"77",77,0,3,"Staneff, Mr. Ivan","male",NA,0,0,"349208",7.8958,"","S","",NA,0
+"85",85,1,2,"Ilett, Miss. Bertha","female",17,0,0,"SO/C 14885",10.5,"","S","",NA,0
+"90",90,0,3,"Celotti, Mr. Francesco","male",24,0,0,"343275",8.05,"","S","",NA,0
+"92",92,0,3,"Andreasson, Mr. Paul Edvin","male",20,0,0,"347466",7.8542,"","S","",NA,0
+"95",95,0,3,"Coxon, Mr. Daniel","male",59,0,0,"364500",7.25,"","S","",NA,0
+"97",97,0,1,"Goldschmidt, Mr. George B","male",71,0,0,"PC 17754",34.6542,"A5","C","A",5,1
+"105",105,0,3,"Gustafsson, Mr. Anders Vilhelm","male",37,2,0,"3101276",7.925,"","S","",NA,0
+"109",109,0,3,"Rekic, Mr. Tido","male",38,0,0,"349249",7.8958,"","S","",NA,0
+"114",114,0,3,"Jussila, Miss. Katriina","female",20,1,0,"4136",9.825,"","S","",NA,0
+"124",124,1,2,"Webber, Miss. Susan","female",32.5,0,0,"27267",13,"E101","S","E",101,1
+"126",126,1,3,"Nicola-Yarred, Master. Elias","male",12,1,0,"2651",11.2417,"","C","",NA,0
+"127",127,0,3,"McMahon, Mr. Martin","male",NA,0,0,"370372",7.75,"","Q","",NA,0
+"139",139,0,3,"Osen, Mr. Olaf Elon","male",16,0,0,"7534",9.2167,"","S","",NA,0
+"147",147,1,3,"Andersson, Mr. August Edvard (""Wennerstrom"")","male",27,0,0,"350043",7.7958,"","S","",NA,0
+"153",153,0,3,"Meo, Mr. Alfonzo","male",55.5,0,0,"A.5. 11206",8.05,"","S","",NA,0
+"162",162,1,2,"Watt, Mrs. James (Elizabeth ""Bessie"" Inglis Milne)","female",40,0,0,"C.A. 33595",15.75,"","S","",NA,0
+"164",164,0,3,"Calic, Mr. Jovo","male",17,0,0,"315093",8.6625,"","S","",NA,0
+"167",167,1,1,"Chibnall, Mrs. (Edith Martha Bowerman)","female",NA,0,1,"113505",55,"E33","S","E",33,1
+"174",174,0,3,"Sivola, Mr. Antti Wilhelm","male",21,0,0,"STON/O 2. 3101280",7.925,"","S","",NA,0
+"175",175,0,1,"Smith, Mr. James Clinch","male",56,0,0,"17764",30.6958,"A7","C","A",7,1
+"185",185,1,3,"Kink-Heilmann, Miss. Luise Gretchen","female",4,0,2,"315153",22.025,"","S","",NA,0
+"207",207,0,3,"Backstrom, Mr. Karl Alfred","male",32,1,0,"3101278",15.85,"","S","",NA,0
+"209",209,1,3,"Carr, Miss. Helen ""Ellen""","female",16,0,0,"367231",7.75,"","Q","",NA,0
+"216",216,1,1,"Newell, Miss. Madeleine","female",31,1,0,"35273",113.275,"D36","C","D",36,1
+"223",223,0,3,"Green, Mr. George Henry","male",51,0,0,"21440",8.05,"","S","",NA,0
+"230",230,0,3,"Lefebre, Miss. Mathilde","female",NA,3,1,"4133",25.4667,"","S","",NA,0
+"245",245,0,3,"Attalah, Mr. Sleiman","male",30,0,0,"2694",7.225,"","C","",NA,0
+"256",256,1,3,"Touma, Mrs. Darwis (Hanne Youssef Razi)","female",29,0,2,"2650",15.2458,"","C","",NA,0
+"257",257,1,1,"Thorne, Mrs. Gertrude Maybelle","female",NA,0,0,"PC 17585",79.2,"","C","",NA,0
+"265",265,0,3,"Henry, Miss. Delia","female",NA,0,0,"382649",7.75,"","Q","",NA,0
+"269",269,1,1,"Graham, Mrs. William Thompson (Edith Junkins)","female",58,0,1,"PC 17582",153.4625,"C125","S","C",125,1
+"270",270,1,1,"Bissette, Miss. Amelia","female",35,0,0,"PC 17760",135.6333,"C99","S","C",99,1
+"271",271,0,1,"Cairns, Mr. Alexander","male",NA,0,0,"113798",31,"","S","",NA,0
+"282",282,0,3,"Olsson, Mr. Nils Johan Goransson","male",28,0,0,"347464",7.8542,"","S","",NA,0
+"284",284,1,3,"Dorking, Mr. Edward Arthur","male",19,0,0,"A/5. 10482",8.05,"","S","",NA,0
+"285",285,0,1,"Smith, Mr. Richard William","male",NA,0,0,"113056",26,"A19","S","A",19,1
+"291",291,1,1,"Barber, Miss. Ellen ""Nellie""","female",26,0,0,"19877",78.85,"","S","",NA,0
+"299",299,1,1,"Saalfeld, Mr. Adolphe","male",NA,0,0,"19988",30.5,"C106","S","C",106,1
+"310",310,1,1,"Francatelli, Miss. Laura Mabel","female",30,0,0,"PC 17485",56.9292,"E36","C","E",36,1
+"313",313,0,2,"Lahtinen, Mrs. William (Anna Sylfven)","female",26,1,1,"250651",26,"","S","",NA,0
+"314",314,0,3,"Hendekovic, Mr. Ignjac","male",28,0,0,"349243",7.8958,"","S","",NA,0
+"323",323,1,2,"Slayter, Miss. Hilda Mary","female",30,0,0,"234818",12.35,"","Q","",NA,0
+"326",326,1,1,"Young, Miss. Marie Grice","female",36,0,0,"PC 17760",135.6333,"C32","C","C",32,1
+"339",339,1,3,"Dahl, Mr. Karl Edwart","male",45,0,0,"7598",8.05,"","S","",NA,0
+"340",340,0,1,"Blackwell, Mr. Stephen Weart","male",45,0,0,"113784",35.5,"T","S","T",NA,1
+"354",354,0,3,"Arnold-Franchi, Mr. Josef","male",25,1,0,"349237",17.8,"","S","",NA,0
+"365",365,0,3,"O'Brien, Mr. Thomas","male",NA,1,0,"370365",15.5,"","Q","",NA,0
+"369",369,1,3,"Jermyn, Miss. Annie","female",NA,0,0,"14313",7.75,"","Q","",NA,0
+"370",370,1,1,"Aubart, Mme. Leontine Pauline","female",24,0,0,"PC 17477",69.3,"B35","C","B",35,1
+"392",392,1,3,"Jansson, Mr. Carl Olof","male",21,0,0,"350034",7.7958,"","S","",NA,0
+"393",393,0,3,"Gustafsson, Mr. Johan Birger","male",28,2,0,"3101277",7.925,"","S","",NA,0
+"399",399,0,2,"Pain, Dr. Alfred","male",23,0,0,"244278",10.5,"","S","",NA,0
+"400",400,1,2,"Trout, Mrs. William H (Jessie L)","female",28,0,0,"240929",12.65,"","S","",NA,0
+"402",402,0,3,"Adams, Mr. John","male",26,0,0,"341826",8.05,"","S","",NA,0
+"404",404,0,3,"Hakkarainen, Mr. Pekka Pietari","male",28,1,0,"STON/O2. 3101279",15.85,"","S","",NA,0
+"411",411,0,3,"Sdycoff, Mr. Todor","male",NA,0,0,"349222",7.8958,"","S","",NA,0
+"413",413,1,1,"Minahan, Miss. Daisy E","female",33,1,0,"19928",90,"C78","Q","C",78,1
+"430",430,1,3,"Pickard, Mr. Berk (Berk Trembisky)","male",32,0,0,"SOTON/O.Q. 392078",8.05,"E10","S","E",10,1
+"437",437,0,3,"Ford, Miss. Doolina Margaret ""Daisy""","female",21,2,2,"W./C. 6608",34.375,"","S","",NA,0
+"440",440,0,2,"Kvillner, Mr. Johan Henrik Johannesson","male",31,0,0,"C.A. 18723",10.5,"","S","",NA,0
+"442",442,0,3,"Hampe, Mr. Leon","male",20,0,0,"345769",9.5,"","S","",NA,0
+"443",443,0,3,"Petterson, Mr. Johan Emil","male",25,1,0,"347076",7.775,"","S","",NA,0
+"448",448,1,1,"Seward, Mr. Frederic Kimber","male",34,0,0,"113794",26.55,"","S","",NA,0
+"466",466,0,3,"Goncalves, Mr. Manuel Estanslas","male",38,0,0,"SOTON/O.Q. 3101306",7.05,"","S","",NA,0
+"475",475,0,3,"Strandberg, Miss. Ida Sofia","female",22,0,0,"7553",9.8375,"","S","",NA,0
+"476",476,0,1,"Clifford, Mr. George Quincy","male",NA,0,0,"110465",52,"A14","S","A",14,1
+"492",492,0,3,"Windelov, Mr. Einar","male",21,0,0,"SOTON/OQ 3101317",7.25,"","S","",NA,0
+"496",496,0,3,"Yousseff, Mr. Gerious","male",NA,0,0,"2627",14.4583,"","C","",NA,0
+"503",503,0,3,"O'Sullivan, Miss. Bridget Mary","female",NA,0,0,"330909",7.6292,"","Q","",NA,0
+"517",517,1,2,"Lemore, Mrs. (Amelia Milley)","female",34,0,0,"C.A. 34260",10.5,"F33","S","F",33,1
+"518",518,0,3,"Ryan, Mr. Patrick","male",NA,0,0,"371110",24.15,"","Q","",NA,0
+"519",519,1,2,"Angle, Mrs. William A (Florence ""Mary"" Agnes Hughes)","female",36,1,0,"226875",26,"","S","",NA,0
+"525",525,0,3,"Kassem, Mr. Fared","male",NA,0,0,"2700",7.2292,"","C","",NA,0
+"530",530,0,2,"Hocking, Mr. Richard George","male",23,2,1,"29104",11.5,"","S","",NA,0
+"533",533,0,3,"Elias, Mr. Joseph Jr","male",17,1,1,"2690",7.2292,"","C","",NA,0
+"542",542,0,3,"Andersson, Miss. Ingeborg Constanzia","female",9,4,2,"347082",31.275,"","S","",NA,0
+"543",543,0,3,"Andersson, Miss. Sigrid Elisabeth","female",11,4,2,"347082",31.275,"","S","",NA,0
+"544",544,1,2,"Beane, Mr. Edward","male",32,1,0,"2908",26,"","S","",NA,0
+"555",555,1,3,"Ohman, Miss. Velin","female",22,0,0,"347085",7.775,"","S","",NA,0
+"560",560,1,3,"de Messemaeker, Mrs. Guillaume Joseph (Emma)","female",36,1,0,"345572",17.4,"","S","",NA,0
+"573",573,1,1,"Flynn, Mr. John Irwin (""Irving"")","male",36,0,0,"PC 17474",26.3875,"E25","S","E",25,1
+"576",576,0,3,"Patchett, Mr. George","male",19,0,0,"358585",14.5,"","S","",NA,0
+"577",577,1,2,"Garside, Miss. Ethel","female",34,0,0,"243880",13,"","S","",NA,0
+"582",582,1,1,"Thayer, Mrs. John Borland (Marian Longstreth Morris)","female",39,1,1,"17421",110.8833,"C68","C","C",68,1
+"584",584,0,1,"Ross, Mr. John Hugo","male",36,0,0,"13049",40.125,"A10","C","A",10,1
+"585",585,0,3,"Paulner, Mr. Uscher","male",NA,0,0,"3411",8.7125,"","C","",NA,0
+"586",586,1,1,"Taussig, Miss. Ruth","female",18,0,2,"110413",79.65,"E68","S","E",68,1
+"587",587,0,2,"Jarvis, Mr. John Denzil","male",47,0,0,"237565",15,"","S","",NA,0
+"593",593,0,3,"Elsbury, Mr. William James","male",47,0,0,"A/5 3902",7.25,"","S","",NA,0
+"606",606,0,3,"Lindell, Mr. Edvard Bengtsson","male",36,1,0,"349910",15.55,"","S","",NA,0
+"626",626,0,1,"Sutton, Mr. Frederick","male",61,0,0,"36963",32.3208,"D50","S","D",50,1
+"630",630,0,3,"O'Connell, Mr. Patrick D","male",NA,0,0,"334912",7.7333,"","Q","",NA,0
+"633",633,1,1,"Stahelin-Maeglin, Dr. Max","male",32,0,0,"13214",30.5,"B50","C","B",50,1
+"635",635,0,3,"Skoog, Miss. Mabel","female",9,3,2,"347088",27.9,"","S","",NA,0
+"640",640,0,3,"Thorneycroft, Mr. Percival","male",NA,1,0,"376564",16.1,"","S","",NA,0
+"641",641,0,3,"Jensen, Mr. Hans Peder","male",20,0,0,"350050",7.8542,"","S","",NA,0
+"643",643,0,3,"Skoog, Miss. Margit Elizabeth","female",2,3,2,"347088",27.9,"","S","",NA,0
+"645",645,1,3,"Baclini, Miss. Eugenie","female",0.75,2,1,"2666",19.2583,"","C","",NA,0
+"647",647,0,3,"Cor, Mr. Liudevit","male",19,0,0,"349231",7.8958,"","S","",NA,0
+"660",660,0,1,"Newell, Mr. Arthur Webster","male",58,0,2,"35273",113.275,"D48","C","D",48,1
+"664",664,0,3,"Coleff, Mr. Peju","male",36,0,0,"349210",7.4958,"","S","",NA,0
+"665",665,1,3,"Lindqvist, Mr. Eino William","male",20,1,0,"STON/O 2. 3101285",7.925,"","S","",NA,0
+"670",670,1,1,"Taylor, Mrs. Elmer Zebley (Juliet Cummins Wright)","female",NA,1,0,"19996",52,"C126","S","C",126,1
+"675",675,0,2,"Watson, Mr. Ennis Hastings","male",NA,0,0,"239856",0,"","S","",NA,0
+"682",682,1,1,"Hassab, Mr. Hammad","male",27,0,0,"PC 17572",76.7292,"D49","C","D",49,1
+"686",686,0,2,"Laroche, Mr. Joseph Philippe Lemercier","male",25,1,2,"SC/Paris 2123",41.5792,"","C","",NA,0
+"687",687,0,3,"Panula, Mr. Jaako Arnold","male",14,4,1,"3101295",39.6875,"","S","",NA,0
+"689",689,0,3,"Fischer, Mr. Eberhard Thelander","male",18,0,0,"350036",7.7958,"","S","",NA,0
+"692",692,1,3,"Karun, Miss. Manca","female",4,0,1,"349256",13.4167,"","C","",NA,0
+"701",701,1,1,"Astor, Mrs. John Jacob (Madeleine Talmadge Force)","female",18,1,0,"PC 17757",227.525,"C62 C64","C","C",62,1
+"703",703,0,3,"Barbara, Miss. Saiide","female",18,0,1,"2691",14.4542,"","C","",NA,0
+"706",706,0,2,"Morley, Mr. Henry Samuel (""Mr Henry Marshall"")","male",39,0,0,"250655",26,"","S","",NA,0
+"707",707,1,2,"Kelly, Mrs. Florence ""Fannie""","female",45,0,0,"223596",13.5,"","S","",NA,0
+"711",711,1,1,"Mayne, Mlle. Berthe Antonine (""Mrs de Villiers"")","female",24,0,0,"PC 17482",49.5042,"C90","C","C",90,1
+"717",717,1,1,"Endres, Miss. Caroline Louise","female",38,0,0,"PC 17757",227.525,"C45","C","C",45,1
+"723",723,0,2,"Gillespie, Mr. William Henry","male",34,0,0,"12233",13,"","S","",NA,0
+"729",729,0,2,"Bryhl, Mr. Kurt Arnold Gottfrid","male",25,1,0,"236853",26,"","S","",NA,0
+"731",731,1,1,"Allen, Miss. Elisabeth Walton","female",29,0,0,"24160",211.3375,"B5","S","B",5,1
+"740",740,0,3,"Nankoff, Mr. Minko","male",NA,0,0,"349218",7.8958,"","S","",NA,0
+"741",741,1,1,"Hawksford, Mr. Walter James","male",NA,0,0,"16988",30,"D45","S","D",45,1
+"743",743,1,1,"Ryerson, Miss. Susan Parker ""Suzette""","female",21,2,2,"PC 17608",262.375,"B57 B59 B63 B66","C","B",57,1
+"745",745,1,3,"Stranden, Mr. Juho","male",31,0,0,"STON/O 2. 3101288",7.925,"","S","",NA,0
+"746",746,0,1,"Crosby, Capt. Edward Gifford","male",70,1,1,"WE/P 5735",71,"B22","S","B",22,1
+"747",747,0,3,"Abbott, Mr. Rossmore Edward","male",16,1,1,"C.A. 2673",20.25,"","S","",NA,0
+"749",749,0,1,"Marvin, Mr. Daniel Warner","male",19,1,0,"113773",53.1,"D30","S","D",30,1
+"750",750,0,3,"Connaghton, Mr. Michael","male",31,0,0,"335097",7.75,"","Q","",NA,0
+"752",752,1,3,"Moor, Master. Meier","male",6,0,1,"392096",12.475,"E121","S","E",121,1
+"764",764,1,1,"Carter, Mrs. William Ernest (Lucile Polk)","female",36,1,2,"113760",120,"B96 B98","S","B",96,1
+"767",767,0,1,"Brewe, Dr. Arthur Jackson","male",NA,0,0,"112379",39.6,"","C","",NA,0
+"779",779,0,3,"Kilgannon, Mr. Thomas J","male",NA,0,0,"36865",7.7375,"","Q","",NA,0
+"784",784,0,3,"Johnston, Mr. Andrew G","male",NA,1,2,"W./C. 6607",23.45,"","S","",NA,0
+"785",785,0,3,"Ali, Mr. William","male",25,0,0,"SOTON/O.Q. 3101312",7.05,"","S","",NA,0
+"787",787,1,3,"Sjoblom, Miss. Anna Sofia","female",18,0,0,"3101265",7.4958,"","S","",NA,0
+"788",788,0,3,"Rice, Master. George Hugh","male",8,4,1,"382652",29.125,"","Q","",NA,0
+"797",797,1,1,"Leader, Dr. Alice (Farnham)","female",49,0,0,"17465",25.9292,"D17","S","D",17,1
+"807",807,0,1,"Andrews, Mr. Thomas Jr","male",39,0,0,"112050",0,"A36","S","A",36,1
+"808",808,0,3,"Pettersson, Miss. Ellen Natalia","female",18,0,0,"347087",7.775,"","S","",NA,0
+"809",809,0,2,"Meyer, Mr. August","male",39,0,0,"248723",13,"","S","",NA,0
+"813",813,0,2,"Slemen, Mr. Richard James","male",35,0,0,"28206",10.5,"","S","",NA,0
+"826",826,0,3,"Flynn, Mr. John","male",NA,0,0,"368323",6.95,"","Q","",NA,0
+"829",829,1,3,"McCormack, Mr. Thomas Joseph","male",NA,0,0,"367228",7.75,"","Q","",NA,0
+"839",839,1,3,"Chip, Mr. Chang","male",32,0,0,"1601",56.4958,"","S","",NA,0
+"840",840,1,1,"Marechal, Mr. Pierre","male",NA,0,0,"11774",29.7,"C47","C","C",47,1
+"843",843,1,1,"Serepeca, Miss. Augusta","female",30,0,0,"113798",31,"","C","",NA,0
+"844",844,0,3,"Lemberopolous, Mr. Peter L","male",34.5,0,0,"2683",6.4375,"","C","",NA,0
+"852",852,0,3,"Svensson, Mr. Johan","male",74,0,0,"347060",7.775,"","S","",NA,0
+"854",854,1,1,"Lines, Miss. Mary Conover","female",16,0,1,"PC 17592",39.4,"D28","S","D",28,1
+"862",862,0,2,"Giles, Mr. Frederick Edward","male",21,1,0,"28134",11.5,"","S","",NA,0
+"865",865,0,2,"Gill, Mr. John William","male",24,0,0,"233866",13,"","S","",NA,0
+"866",866,1,2,"Bystrom, Mrs. (Karolina)","female",42,0,0,"236852",13,"","S","",NA,0
+"868",868,0,1,"Roebling, Mr. Washington Augustus II","male",31,0,0,"PC 17590",50.4958,"A24","S","A",24,1
+"870",870,1,3,"Johnson, Master. Harold Theodor","male",4,1,1,"347742",11.1333,"","S","",NA,0
+"872",872,1,1,"Beckwith, Mrs. Richard Leonard (Sallie Monypeny)","female",47,1,1,"11751",52.5542,"D35","S","D",35,1
+"875",875,1,2,"Abelson, Mrs. Samuel (Hannah Wizosky)","female",28,1,0,"P/PP 3381",24,"","C","",NA,0
+"876",876,1,3,"Najib, Miss. Adele Kiamie ""Jane""","female",15,0,0,"2667",7.225,"","C","",NA,0
+"878",878,0,3,"Petroff, Mr. Nedelio","male",19,0,0,"349212",7.8958,"","S","",NA,0
+"886",886,0,3,"Rice, Mrs. William (Margaret Norton)","female",39,0,5,"382652",29.125,"","Q","",NA,0
+"887",887,0,2,"Montvila, Rev. Juozas","male",27,0,0,"211536",13,"","S","",NA,0
+"888",888,1,1,"Graham, Miss. Margaret Edith","female",19,0,0,"112053",30,"B42","S","B",42,1
+"890",890,1,1,"Behr, Mr. Karl Howell","male",26,0,0,"111369",30,"C148","C","C",148,1
