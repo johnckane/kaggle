@@ -32,7 +32,7 @@ training$day_of_year <- as.numeric(format(training$date, "%j"))
 The City of Chicago and Chicago Department of Public Health launched a Kaggle competition aimed at improving the city's ability to locate when and where mosquito species will test test postive for West Nile Virus (WNV).
 
 This competition is ongoing but described here are my methods and results thus far. I plan to continue improving my models to attain a higher position on the leaderboard.
-Currently I am placed in the top 10% (90/1004) of all entries.
+Currently I am placed in the top 10% (100/1027) of all entries.
 
 Certain features were influential to predicting positive tests for WNV no matter the method. This included a mix of engineered features and some used in their provided format. Among them are mosquito species, time of year, trap location within the city and dew point (including most recent readings, 30 day averages and spring averages) among others.
 
@@ -45,6 +45,10 @@ Predictions were evaluated by the corresponding area under the receiver operatin
 
 ## Data
 Trap data from previous test results as well as weather data from both O'Hare and Midway airports and data on spraying efforts to reduce mosquitoes in 2011 and 2013 were provided.
+
+I created training data and cross validation data by splitting up the data 67%-33% randomly in a way that preserved the distribution of variables in both datasets.
+
+Postive tests for WNV were somewhat rare, with traps testing positive just under 5% of the time. 
 
 #### Trap Data
 The "Main" dataset, the one with information on traps and results of previous tests contained variables for test date, trap identification, trap location (street address as well as latitude and longitude), trap location accuracy, mosquito species, number of mosquitos tested and presence of WNV.
